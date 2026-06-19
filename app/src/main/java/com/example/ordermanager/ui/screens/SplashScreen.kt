@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun SplashScreen() {
@@ -18,12 +19,12 @@ fun SplashScreen() {
     ) {
 
         Text(
-            text = "OrderManager",
+            text = "📦 OrderManager",
             style = MaterialTheme.typography.headlineLarge
         )
 
         Text(
-            text = "Controle de Pedidos e Clientes",
+            text = "Sistema de Gestão Comercial",
             style = MaterialTheme.typography.bodyLarge
         )
 
