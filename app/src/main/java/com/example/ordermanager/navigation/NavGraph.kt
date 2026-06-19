@@ -20,6 +20,8 @@ import com.example.ordermanager.ui.viewmodel.OrderViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
 import com.example.ordermanager.ui.viewmodel.SettingsViewModel
 import kotlinx.coroutines.delay
+import com.example.ordermanager.ui.screens.UserManagementScreen
+import com.example.ordermanager.ui.viewmodel.UserManagementViewModel
 
 @Composable
 fun NavGraph(
@@ -27,7 +29,8 @@ fun NavGraph(
     clientViewModel: ClientViewModel,
     productViewModel: ProductViewModel,
     orderViewModel: OrderViewModel,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    userManagementViewModel: UserManagementViewModel
 ) {
     val navController = rememberNavController()
 
@@ -48,6 +51,14 @@ fun NavGraph(
                 }
             }
         }
+        composable(Routes.USERS) {
+            UserManagementScreen(
+                viewModel = userManagementViewModel,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
 
         composable(Routes.LOGIN) {
             LoginScreen(
@@ -66,6 +77,7 @@ fun NavGraph(
             val clients by clientViewModel.clients.collectAsState()
             val products by productViewModel.products.collectAsState()
             val orders by orderViewModel.orders.collectAsState()
+            val loggedUser by loginViewModel.loggedUser.collectAsState()
 
             HomeScreen(
                 clientCount = clients.size,
@@ -82,6 +94,10 @@ fun NavGraph(
                 },
                 onSettingsClick = {
                     navController.navigate(Routes.SETTINGS)
+                },
+                isAdmin = loggedUser?.role == "ADMIN",
+                onUsersClick = {
+                    navController.navigate(Routes.USERS)
                 }
             )
         }

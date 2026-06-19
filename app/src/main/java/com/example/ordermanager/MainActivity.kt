@@ -24,6 +24,8 @@ import com.example.ordermanager.ui.viewmodel.ProductViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModelFactory
 import com.example.ordermanager.ui.viewmodel.SettingsViewModel
 import com.example.ordermanager.ui.viewmodel.SettingsViewModelFactory
+import com.example.ordermanager.ui.viewmodel.UserManagementViewModel
+import com.example.ordermanager.ui.viewmodel.UserManagementViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -64,6 +66,10 @@ class MainActivity : ComponentActivity() {
 
                 val orderViewModel: OrderViewModel = viewModel(
                     factory = OrderViewModelFactory(orderRepository)
+                )
+
+                val userManagementViewModel: UserManagementViewModel = viewModel(
+                    factory = UserManagementViewModelFactory(userRepository)
                 )
 
                 NavGraph(

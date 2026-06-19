@@ -12,10 +12,12 @@ fun HomeScreen(
     clientCount: Int,
     productCount: Int,
     orderCount: Int,
+    isAdmin: Boolean,
     onClientsClick: () -> Unit,
     onProductsClick: () -> Unit,
     onOrdersClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onUsersClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -89,6 +91,17 @@ fun HomeScreen(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
+
+        if (isAdmin) {
+            Button(
+                onClick = onUsersClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Usuários / Vendedores")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+        }
 
         Button(
             onClick = onSettingsClick,

@@ -8,4 +8,5 @@ object Routes {
     const val PRODUCTS = "products"
     const val ORDERS = "orders"
     const val SETTINGS = "settings"
+    const val USERS = "users"
 }
