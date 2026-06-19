@@ -11,7 +11,8 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     onClientsClick: () -> Unit,
     onProductsClick: () -> Unit,
-    onOrdersClick: () -> Unit
+    onOrdersClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -54,7 +55,10 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Button(onClick = {}, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = onSettingsClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Configurações")
         }
     }

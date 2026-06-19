@@ -27,6 +27,11 @@ import com.example.ordermanager.data.repository.OrderRepository
 import com.example.ordermanager.ui.screens.OrderScreen
 import com.example.ordermanager.ui.viewmodel.OrderViewModel
 import com.example.ordermanager.ui.viewmodel.OrderViewModelFactory
+import com.example.ordermanager.data.datastore.SettingsDataStore
+import com.example.ordermanager.ui.screens.SettingsScreen
+import com.example.ordermanager.ui.viewmodel.SettingsViewModel
+import com.example.ordermanager.ui.viewmodel.SettingsViewModelFactory
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +43,17 @@ class MainActivity : ComponentActivity() {
         val clientRepository = ClientRepository(database.clientDao())
         val productRepository = ProductRepository(database.productDao())
         val orderRepository = OrderRepository(database.orderDao())
+        val settingsDataStore = SettingsDataStore(this)
 
         setContent {
             OrderManagerTheme {
 
                 val loginViewModel: LoginViewModel = viewModel(
                     factory = LoginViewModelFactory(userRepository)
+                )
+
+                val settingsViewModel: SettingsViewModel = viewModel(
+                    factory = SettingsViewModelFactory(settingsDataStore)
                 )
 
                 val clientViewModel: ClientViewModel = viewModel(
@@ -65,8 +75,18 @@ class MainActivity : ComponentActivity() {
                         "home" -> HomeScreen(
                             onClientsClick = { currentScreen = "clients" },
                             onProductsClick = { currentScreen = "products" },
-                            onOrdersClick = { currentScreen = "orders" }
+                            onOrdersClick = { currentScreen = "orders" },
+                            onSettingsClick = {
+                                currentScreen = "settings"
+                            }
                         )
+                        "settings" -> SettingsScreen(
+                            viewModel = settingsViewModel,
+                            onBackClick = {
+                                currentScreen = "home"
+                            }
+                        )
+
 
                         "clients" -> ClientScreen(
                             viewModel = clientViewModel,
