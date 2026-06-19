@@ -33,6 +33,9 @@ fun OrderScreen(
     var selectedProductId by remember { mutableStateOf<Int?>(null) }
     var quantity by remember { mutableStateOf("") }
 
+    var expandedClient by remember { mutableStateOf(false) }
+    var expandedProduct by remember { mutableStateOf(false) }
+
     var selectedDate by remember { mutableStateOf("Selecionar data") }
     var selectedTime by remember { mutableStateOf("Selecionar hora") }
 
@@ -77,29 +80,87 @@ fun OrderScreen(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text("Cliente")
+                ExposedDropdownMenuBox(
+                    expanded = expandedClient,
+                    onExpandedChange = {
+                        expandedClient = !expandedClient
+                    }
+                ) {
+                    OutlinedTextField(
+                        value = clients.find { it.id == selectedClientId }?.name ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Cliente") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = expandedClient
+                            )
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
 
-                clients.forEach { client ->
-                    Row {
-                        RadioButton(
-                            selected = selectedClientId == client.id,
-                            onClick = { selectedClientId = client.id }
-                        )
-                        Text(client.name)
+                    ExposedDropdownMenu(
+                        expanded = expandedClient,
+                        onDismissRequest = {
+                            expandedClient = false
+                        }
+                    ) {
+                        clients.forEach { client ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(client.name)
+                                },
+                                onClick = {
+                                    selectedClientId = client.id
+                                    expandedClient = false
+                                }
+                            )
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Produto")
+                ExposedDropdownMenuBox(
+                    expanded = expandedProduct,
+                    onExpandedChange = {
+                        expandedProduct = !expandedProduct
+                    }
+                ) {
+                    OutlinedTextField(
+                        value = products.find { it.id == selectedProductId }?.name ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Produto") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = expandedProduct
+                            )
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth()
+                    )
 
-                products.forEach { product ->
-                    Row {
-                        RadioButton(
-                            selected = selectedProductId == product.id,
-                            onClick = { selectedProductId = product.id }
-                        )
-                        Text("${product.name} - R$ ${product.price}")
+                    ExposedDropdownMenu(
+                        expanded = expandedProduct,
+                        onDismissRequest = {
+                            expandedProduct = false
+                        }
+                    ) {
+                        products.forEach { product ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text("${product.name} - R$ ${product.price}")
+                                },
+                                onClick = {
+                                    selectedProductId = product.id
+                                    expandedProduct = false
+                                }
+                            )
+                        }
                     }
                 }
 
