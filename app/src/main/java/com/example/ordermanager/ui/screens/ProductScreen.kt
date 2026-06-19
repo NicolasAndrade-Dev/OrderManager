@@ -3,17 +3,18 @@ package com.example.ordermanager.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.ordermanager.data.entity.ProductEntity
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
+
 @Composable
 fun ProductScreen(
     viewModel: ProductViewModel,
@@ -26,6 +27,8 @@ fun ProductScreen(
     var stock by remember { mutableStateOf("") }
 
     var editingProduct by remember { mutableStateOf<ProductEntity?>(null) }
+    var productToDelete by remember { mutableStateOf<ProductEntity?>(null) }
+
     var message by remember { mutableStateOf<String?>(null) }
 
     val products by viewModel.products.collectAsState()
@@ -80,7 +83,7 @@ fun ProductScreen(
                 OutlinedTextField(
                     value = price,
                     onValueChange = { newValue ->
-                        price = newValue.filter { it.isDigit() || it == '.' }
+                        price = newValue.filter { it.isDigit() || it == '.' || it == ',' }
                     },
                     label = { Text("Preço") },
                     keyboardOptions = KeyboardOptions(
@@ -105,7 +108,6 @@ fun ProductScreen(
 
                 Button(
                     onClick = {
-
                         if (
                             name.isBlank() ||
                             description.isBlank() ||
@@ -116,25 +118,36 @@ fun ProductScreen(
                             return@Button
                         }
 
-                        if (editingProduct == null) {
+                        val formattedPrice = price.replace(",", ".")
+                        val productPrice = formattedPrice.toDoubleOrNull()
+                        val productStock = stock.toIntOrNull()
 
+                        if (productPrice == null || productPrice <= 0.0) {
+                            message = "Digite um preço válido"
+                            return@Button
+                        }
+
+                        if (productStock == null || productStock < 0) {
+                            message = "Digite um estoque válido"
+                            return@Button
+                        }
+
+                        if (editingProduct == null) {
                             viewModel.insert(
                                 name,
                                 description,
-                                price.replace(",", ".").toDouble(),
-                                stock.toInt()
+                                productPrice,
+                                productStock
                             )
 
                             message = "Produto cadastrado com sucesso"
-
                         } else {
-
                             viewModel.update(
                                 editingProduct!!.copy(
                                     name = name,
                                     description = description,
-                                    price = price.replace(",", ".").toDouble(),
-                                    stockQuantity = stock.toInt()
+                                    price = productPrice,
+                                    stockQuantity = productStock
                                 )
                             )
 
@@ -159,7 +172,6 @@ fun ProductScreen(
                 }
 
                 if (editingProduct != null) {
-
                     TextButton(
                         onClick = {
                             editingProduct = null
@@ -177,7 +189,6 @@ fun ProductScreen(
         }
 
         message?.let {
-
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
@@ -196,9 +207,7 @@ fun ProductScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         LazyColumn {
-
             items(products) { product ->
-
                 ProductCard(
                     product = product,
                     onEdit = {
@@ -210,12 +219,45 @@ fun ProductScreen(
                         stock = product.stockQuantity.toString()
                     },
                     onDelete = {
-                        viewModel.delete(product)
-                        message = "Produto excluído"
+                        productToDelete = product
                     }
                 )
             }
         }
+    }
+
+    productToDelete?.let { product ->
+        AlertDialog(
+            onDismissRequest = {
+                productToDelete = null
+            },
+            title = {
+                Text("Confirmar exclusão")
+            },
+            text = {
+                Text("Deseja realmente excluir o produto ${product.name}?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.delete(product)
+                        productToDelete = null
+                        message = "Produto excluído"
+                    }
+                ) {
+                    Text("Excluir")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        productToDelete = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 
