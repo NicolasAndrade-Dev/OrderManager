@@ -18,7 +18,7 @@ import com.example.ordermanager.data.entity.UserEntity
         ProductEntity::class,
         OrderEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
