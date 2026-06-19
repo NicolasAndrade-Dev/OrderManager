@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         val settingsDataStore = SettingsDataStore(this)
 
         setContent {
-
             val settingsViewModel: SettingsViewModel = viewModel(
                 factory = SettingsViewModelFactory(settingsDataStore)
             )
@@ -77,7 +76,8 @@ class MainActivity : ComponentActivity() {
                     clientViewModel = clientViewModel,
                     productViewModel = productViewModel,
                     orderViewModel = orderViewModel,
-                    settingsViewModel = settingsViewModel
+                    settingsViewModel = settingsViewModel,
+                    userManagementViewModel = userManagementViewModel
                 )
             }
         }
