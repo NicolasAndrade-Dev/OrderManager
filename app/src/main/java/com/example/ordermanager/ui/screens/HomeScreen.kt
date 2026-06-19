@@ -10,7 +10,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     onClientsClick: () -> Unit,
-    onProductsClick: () -> Unit
+    onProductsClick: () -> Unit,
+    onOrdersClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -44,7 +45,10 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Button(onClick = {}, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = onOrdersClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Pedidos")
         }
 

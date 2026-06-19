@@ -23,7 +23,10 @@ import com.example.ordermanager.ui.viewmodel.LoginViewModel
 import com.example.ordermanager.ui.viewmodel.LoginViewModelFactory
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModelFactory
-
+import com.example.ordermanager.data.repository.OrderRepository
+import com.example.ordermanager.ui.screens.OrderScreen
+import com.example.ordermanager.ui.viewmodel.OrderViewModel
+import com.example.ordermanager.ui.viewmodel.OrderViewModelFactory
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class MainActivity : ComponentActivity() {
         val userRepository = UserRepository(database.userDao())
         val clientRepository = ClientRepository(database.clientDao())
         val productRepository = ProductRepository(database.productDao())
+        val orderRepository = OrderRepository(database.orderDao())
 
         setContent {
             OrderManagerTheme {
@@ -49,6 +53,9 @@ class MainActivity : ComponentActivity() {
                 val productViewModel: ProductViewModel = viewModel(
                     factory = ProductViewModelFactory(productRepository)
                 )
+                val orderViewModel: OrderViewModel = viewModel(
+                    factory = OrderViewModelFactory(orderRepository)
+                )
 
                 var isLoggedIn by remember { mutableStateOf(false) }
                 var currentScreen by remember { mutableStateOf("home") }
@@ -56,12 +63,9 @@ class MainActivity : ComponentActivity() {
                 if (isLoggedIn) {
                     when (currentScreen) {
                         "home" -> HomeScreen(
-                            onClientsClick = {
-                                currentScreen = "clients"
-                            },
-                            onProductsClick = {
-                                currentScreen = "products"
-                            }
+                            onClientsClick = { currentScreen = "clients" },
+                            onProductsClick = { currentScreen = "products" },
+                            onOrdersClick = { currentScreen = "orders" }
                         )
 
                         "clients" -> ClientScreen(
@@ -73,6 +77,14 @@ class MainActivity : ComponentActivity() {
 
                         "products" -> ProductScreen(
                             viewModel = productViewModel,
+                            onBackClick = {
+                                currentScreen = "home"
+                            }
+                        )
+                        "orders" -> OrderScreen(
+                            orderViewModel = orderViewModel,
+                            clientViewModel = clientViewModel,
+                            productViewModel = productViewModel,
                             onBackClick = {
                                 currentScreen = "home"
                             }
