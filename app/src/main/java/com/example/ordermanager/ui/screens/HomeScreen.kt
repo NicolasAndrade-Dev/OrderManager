@@ -36,26 +36,30 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+        Text(
+            text = "Resumo do Sistema",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-                Text(
-                    text = "Resumo do Sistema",
-                    style = MaterialTheme.typography.titleLarge
-                )
+        Spacer(modifier = Modifier.height(12.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
+        DashboardCard(
+            title = "Clientes cadastrados",
+            value = clientCount.toString(),
+            icon = "👥"
+        )
 
-                Text("👥 Clientes cadastrados: $clientCount")
-                Text("📦 Produtos cadastrados: $productCount")
-                Text("🛒 Pedidos realizados: $orderCount")
-            }
-        }
+        DashboardCard(
+            title = "Produtos cadastrados",
+            value = productCount.toString(),
+            icon = "📦"
+        )
+
+        DashboardCard(
+            title = "Pedidos realizados",
+            value = orderCount.toString(),
+            icon = "🛒"
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -93,5 +97,43 @@ fun HomeScreen(
             Text("Configurações")
         }
     }
+}
 
+@Composable
+fun DashboardCard(
+    title: String,
+    value: String,
+    icon: String
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
+            Text(
+                text = icon,
+                style = MaterialTheme.typography.headlineMedium
+            )
+        }
+    }
 }
