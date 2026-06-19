@@ -1,5 +1,6 @@
 package com.example.ordermanager
 
+import androidx.compose.runtime.collectAsState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -73,12 +74,26 @@ class MainActivity : ComponentActivity() {
                 if (isLoggedIn) {
                     when (currentScreen) {
                         "home" -> HomeScreen(
-                            onClientsClick = { currentScreen = "clients" },
-                            onProductsClick = { currentScreen = "products" },
-                            onOrdersClick = { currentScreen = "orders" },
+                            clientCount = clientViewModel.clients.collectAsState().value.size,
+                            productCount = productViewModel.products.collectAsState().value.size,
+                            orderCount = orderViewModel.orders.collectAsState().value.size,
+
+                            onClientsClick = {
+                                currentScreen = "clients"
+                            },
+
+                            onProductsClick = {
+                                currentScreen = "products"
+                            },
+
+                            onOrdersClick = {
+                                currentScreen = "orders"
+                            },
+
                             onSettingsClick = {
                                 currentScreen = "settings"
                             }
+
                         )
                         "settings" -> SettingsScreen(
                             viewModel = settingsViewModel,

@@ -9,6 +9,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HomeScreen(
+    clientCount: Int,
+    productCount: Int,
+    orderCount: Int,
     onClientsClick: () -> Unit,
     onProductsClick: () -> Unit,
     onOrdersClick: () -> Unit,
@@ -18,13 +21,41 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
-            text = "Bem-vindo ao OrderManager",
-            style = MaterialTheme.typography.headlineSmall
+            text = "OrderManager",
+            style = MaterialTheme.typography.headlineMedium
         )
+
+        Text(
+            text = "Controle de Pedidos e Clientes",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+
+                Text(
+                    text = "Resumo do Sistema",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text("👥 Clientes cadastrados: $clientCount")
+                Text("📦 Produtos cadastrados: $productCount")
+                Text("🛒 Pedidos realizados: $orderCount")
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -62,4 +93,5 @@ fun HomeScreen(
             Text("Configurações")
         }
     }
+
 }
