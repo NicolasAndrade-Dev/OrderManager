@@ -3,29 +3,33 @@ package com.example.ordermanager.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.ordermanager.data.entity.ClientEntity
 import com.example.ordermanager.ui.viewmodel.ClientViewModel
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun ClientScreen(
     viewModel: ClientViewModel,
     onBackClick: () -> Unit
-){
+) {
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
+
     var editingClient by remember { mutableStateOf<ClientEntity?>(null) }
+    var clientToDelete by remember { mutableStateOf<ClientEntity?>(null) }
+
     var message by remember { mutableStateOf<String?>(null) }
+
     val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
     val clients by viewModel.clients.collectAsState()
 
@@ -139,7 +143,12 @@ fun ClientScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(if (editingClient == null) "Salvar Cliente" else "Atualizar Cliente")
+                    Text(
+                        if (editingClient == null)
+                            "Salvar Cliente"
+                        else
+                            "Atualizar Cliente"
+                    )
                 }
 
                 if (editingClient != null) {
@@ -188,12 +197,45 @@ fun ClientScreen(
                         city = client.city
                     },
                     onDelete = {
-                        viewModel.delete(client)
-                        message = "Cliente excluído"
+                        clientToDelete = client
                     }
                 )
             }
         }
+    }
+
+    clientToDelete?.let { client ->
+        AlertDialog(
+            onDismissRequest = {
+                clientToDelete = null
+            },
+            title = {
+                Text("Confirmar exclusão")
+            },
+            text = {
+                Text("Deseja realmente excluir o cliente ${client.name}?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.delete(client)
+                        clientToDelete = null
+                        message = "Cliente excluído"
+                    }
+                ) {
+                    Text("Excluir")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        clientToDelete = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 
