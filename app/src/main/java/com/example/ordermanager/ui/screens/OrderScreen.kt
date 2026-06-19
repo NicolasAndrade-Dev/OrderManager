@@ -7,13 +7,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.ordermanager.data.entity.OrderWithDetails
 import com.example.ordermanager.ui.viewmodel.ClientViewModel
 import com.example.ordermanager.ui.viewmodel.OrderViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import com.example.ordermanager.data.entity.OrderWithDetails
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderScreen(
     orderViewModel: OrderViewModel,
@@ -26,13 +28,24 @@ fun OrderScreen(
     val products by productViewModel.products.collectAsState()
 
     var orderToDelete by remember { mutableStateOf<OrderWithDetails?>(null) }
+
     var selectedClientId by remember { mutableStateOf<Int?>(null) }
     var selectedProductId by remember { mutableStateOf<Int?>(null) }
     var quantity by remember { mutableStateOf("") }
+
+    var selectedDate by remember { mutableStateOf("Selecionar data") }
+    var selectedTime by remember { mutableStateOf("Selecionar hora") }
+
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+
     var message by remember { mutableStateOf<String?>(null) }
 
     val selectedProduct = products.find { it.id == selectedProductId }
     val totalValue = (quantity.toIntOrNull() ?: 0) * (selectedProduct?.price ?: 0.0)
+
+    val datePickerState = rememberDatePickerState()
+    val timePickerState = rememberTimePickerState()
 
     Column(
         modifier = Modifier
@@ -103,6 +116,24 @@ fun OrderScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                Button(
+                    onClick = { showDatePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(selectedDate)
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Button(
+                    onClick = { showTimePicker = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(selectedTime)
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     text = "Valor total: R$ $totalValue",
                     style = MaterialTheme.typography.titleMedium
@@ -112,8 +143,14 @@ fun OrderScreen(
 
                 Button(
                     onClick = {
-                        if (selectedClientId == null || selectedProductId == null || quantity.isBlank()) {
-                            message = "Selecione cliente, produto e quantidade"
+                        if (
+                            selectedClientId == null ||
+                            selectedProductId == null ||
+                            quantity.isBlank() ||
+                            selectedDate == "Selecionar data" ||
+                            selectedTime == "Selecionar hora"
+                        ) {
+                            message = "Preencha todos os dados do pedido"
                             return@Button
                         }
 
@@ -121,8 +158,8 @@ fun OrderScreen(
                             clientId = selectedClientId!!,
                             productId = selectedProductId!!,
                             quantity = quantity.toInt(),
-                            orderDate = "19/06/2026",
-                            orderTime = "12:00",
+                            orderDate = selectedDate,
+                            orderTime = selectedTime,
                             totalValue = totalValue
                         )
 
@@ -131,6 +168,8 @@ fun OrderScreen(
                         selectedClientId = null
                         selectedProductId = null
                         quantity = ""
+                        selectedDate = "Selecionar data"
+                        selectedTime = "Selecionar hora"
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -171,6 +210,7 @@ fun OrderScreen(
                         Text("Data: ${order.orderDate}")
                         Text("Hora: ${order.orderTime}")
                         Text("Total: R$ ${order.totalValue}")
+
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Button(
@@ -186,39 +226,111 @@ fun OrderScreen(
                     }
                 }
             }
-            orderToDelete?.let { order ->
-                AlertDialog(
-                    onDismissRequest = {
-                        orderToDelete = null
-                    },
-                    title = {
-                        Text("Confirmar exclusão")
-                    },
-                    text = {
-                        Text("Deseja realmente excluir este pedido?")
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                orderViewModel.deleteById(order.id)
-                                orderToDelete = null
-                                message = "Pedido excluído"
-                            }
-                        ) {
-                            Text("Excluir")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                orderToDelete = null
-                            }
-                        ) {
-                            Text("Cancelar")
-                        }
-                    }
-                )
-            }
         }
+    }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = {
+                showDatePicker = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val millis = datePickerState.selectedDateMillis
+
+                        if (millis != null) {
+                            val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            selectedDate = formatter.format(Date(millis))
+                        }
+
+                        showDatePicker = false
+                    }
+                ) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        AlertDialog(
+            onDismissRequest = {
+                showTimePicker = false
+            },
+            title = {
+                Text("Selecionar hora")
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        selectedTime = "%02d:%02d".format(
+                            timePickerState.hour,
+                            timePickerState.minute
+                        )
+                        showTimePicker = false
+                    }
+                ) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showTimePicker = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    orderToDelete?.let { order ->
+        AlertDialog(
+            onDismissRequest = {
+                orderToDelete = null
+            },
+            title = {
+                Text("Confirmar exclusão")
+            },
+            text = {
+                Text("Deseja realmente excluir este pedido?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        orderViewModel.deleteById(order.id)
+                        orderToDelete = null
+                        message = "Pedido excluído"
+                    }
+                ) {
+                    Text("Excluir")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        orderToDelete = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
