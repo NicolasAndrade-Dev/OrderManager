@@ -39,4 +39,7 @@ interface OrderDao {
 
     @Query("SELECT * FROM orders WHERE id = :id")
     suspend fun getOrderById(id: Int): OrderEntity?
+
+    @Query("DELETE FROM orders WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

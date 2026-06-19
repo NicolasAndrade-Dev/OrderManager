@@ -51,4 +51,10 @@ class OrderViewModel(
             repository.delete(order)
         }
     }
+
+    fun deleteById(id: Int) {
+        viewModelScope.launch {
+            repository.deleteById(id)
+        }
+    }
 }

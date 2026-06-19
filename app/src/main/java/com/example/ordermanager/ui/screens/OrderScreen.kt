@@ -10,6 +10,9 @@ import androidx.compose.ui.unit.dp
 import com.example.ordermanager.ui.viewmodel.ClientViewModel
 import com.example.ordermanager.ui.viewmodel.OrderViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import com.example.ordermanager.data.entity.OrderWithDetails
 
 @Composable
 fun OrderScreen(
@@ -22,6 +25,7 @@ fun OrderScreen(
     val clients by clientViewModel.clients.collectAsState()
     val products by productViewModel.products.collectAsState()
 
+    var orderToDelete by remember { mutableStateOf<OrderWithDetails?>(null) }
     var selectedClientId by remember { mutableStateOf<Int?>(null) }
     var selectedProductId by remember { mutableStateOf<Int?>(null) }
     var quantity by remember { mutableStateOf("") }
@@ -167,8 +171,53 @@ fun OrderScreen(
                         Text("Data: ${order.orderDate}")
                         Text("Hora: ${order.orderTime}")
                         Text("Total: R$ ${order.totalValue}")
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            onClick = {
+                                orderToDelete = order
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error
+                            )
+                        ) {
+                            Text("Excluir")
+                        }
                     }
                 }
+            }
+            orderToDelete?.let { order ->
+                AlertDialog(
+                    onDismissRequest = {
+                        orderToDelete = null
+                    },
+                    title = {
+                        Text("Confirmar exclusão")
+                    },
+                    text = {
+                        Text("Deseja realmente excluir este pedido?")
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                orderViewModel.deleteById(order.id)
+                                orderToDelete = null
+                                message = "Pedido excluído"
+                            }
+                        ) {
+                            Text("Excluir")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                orderToDelete = null
+                            }
+                        ) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
             }
         }
     }

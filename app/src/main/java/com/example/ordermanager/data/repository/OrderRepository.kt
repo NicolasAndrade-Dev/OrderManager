@@ -20,4 +20,8 @@ class OrderRepository(
     suspend fun delete(order: OrderEntity) {
         orderDao.delete(order)
     }
+
+    suspend fun deleteById(id: Int) {
+        orderDao.deleteById(id)
+    }
 }
