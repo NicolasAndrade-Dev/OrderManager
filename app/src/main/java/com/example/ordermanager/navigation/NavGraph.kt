@@ -1,6 +1,7 @@
 package com.example.ordermanager.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
@@ -12,11 +13,13 @@ import com.example.ordermanager.ui.screens.LoginScreen
 import com.example.ordermanager.ui.screens.OrderScreen
 import com.example.ordermanager.ui.screens.ProductScreen
 import com.example.ordermanager.ui.screens.SettingsScreen
+import com.example.ordermanager.ui.screens.SplashScreen
 import com.example.ordermanager.ui.viewmodel.ClientViewModel
 import com.example.ordermanager.ui.viewmodel.LoginViewModel
 import com.example.ordermanager.ui.viewmodel.OrderViewModel
 import com.example.ordermanager.ui.viewmodel.ProductViewModel
 import com.example.ordermanager.ui.viewmodel.SettingsViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun NavGraph(
@@ -30,8 +33,22 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.LOGIN
+        startDestination = Routes.SPLASH
     ) {
+        composable(Routes.SPLASH) {
+            SplashScreen()
+
+            LaunchedEffect(Unit) {
+                delay(2000)
+
+                navController.navigate(Routes.LOGIN) {
+                    popUpTo(Routes.SPLASH) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+
         composable(Routes.LOGIN) {
             LoginScreen(
                 viewModel = loginViewModel,
