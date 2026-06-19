@@ -68,8 +68,13 @@ fun ClientScreen(
 
                 OutlinedTextField(
                     value = phone,
-                    onValueChange = { phone = it },
+                    onValueChange = { newValue ->
+                        phone = newValue.filter { it.isDigit() }
+                    },
                     label = { Text("Telefone") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone
+                    ),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -103,6 +108,11 @@ fun ClientScreen(
 
                         if (!emailRegex.matches(email)) {
                             message = "Digite um e-mail válido"
+                            return@Button
+                        }
+
+                        if (phone.length < 10 || phone.length > 11) {
+                            message = "Telefone inválido"
                             return@Button
                         }
 
