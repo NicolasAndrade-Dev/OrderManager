@@ -5,9 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ordermanager.data.database.DatabaseProvider
 import com.example.ordermanager.data.datastore.SettingsDataStore
@@ -15,12 +12,7 @@ import com.example.ordermanager.data.repository.ClientRepository
 import com.example.ordermanager.data.repository.OrderRepository
 import com.example.ordermanager.data.repository.ProductRepository
 import com.example.ordermanager.data.repository.UserRepository
-import com.example.ordermanager.ui.screens.ClientScreen
-import com.example.ordermanager.ui.screens.HomeScreen
-import com.example.ordermanager.ui.screens.LoginScreen
-import com.example.ordermanager.ui.screens.OrderScreen
-import com.example.ordermanager.ui.screens.ProductScreen
-import com.example.ordermanager.ui.screens.SettingsScreen
+import com.example.ordermanager.navigation.NavGraph
 import com.example.ordermanager.ui.theme.OrderManagerTheme
 import com.example.ordermanager.ui.viewmodel.ClientViewModel
 import com.example.ordermanager.ui.viewmodel.ClientViewModelFactory
@@ -58,7 +50,6 @@ class MainActivity : ComponentActivity() {
                 darkTheme = darkTheme,
                 dynamicColor = false
             ) {
-
                 val loginViewModel: LoginViewModel = viewModel(
                     factory = LoginViewModelFactory(userRepository)
                 )
@@ -75,68 +66,13 @@ class MainActivity : ComponentActivity() {
                     factory = OrderViewModelFactory(orderRepository)
                 )
 
-                var isLoggedIn by remember { mutableStateOf(false) }
-                var currentScreen by remember { mutableStateOf("home") }
-
-                if (isLoggedIn) {
-                    when (currentScreen) {
-
-                        "home" -> HomeScreen(
-                            clientCount = clientViewModel.clients.collectAsState().value.size,
-                            productCount = productViewModel.products.collectAsState().value.size,
-                            orderCount = orderViewModel.orders.collectAsState().value.size,
-                            onClientsClick = {
-                                currentScreen = "clients"
-                            },
-                            onProductsClick = {
-                                currentScreen = "products"
-                            },
-                            onOrdersClick = {
-                                currentScreen = "orders"
-                            },
-                            onSettingsClick = {
-                                currentScreen = "settings"
-                            }
-                        )
-
-                        "clients" -> ClientScreen(
-                            viewModel = clientViewModel,
-                            onBackClick = {
-                                currentScreen = "home"
-                            }
-                        )
-
-                        "products" -> ProductScreen(
-                            viewModel = productViewModel,
-                            onBackClick = {
-                                currentScreen = "home"
-                            }
-                        )
-
-                        "orders" -> OrderScreen(
-                            orderViewModel = orderViewModel,
-                            clientViewModel = clientViewModel,
-                            productViewModel = productViewModel,
-                            onBackClick = {
-                                currentScreen = "home"
-                            }
-                        )
-
-                        "settings" -> SettingsScreen(
-                            viewModel = settingsViewModel,
-                            onBackClick = {
-                                currentScreen = "home"
-                            }
-                        )
-                    }
-                } else {
-                    LoginScreen(
-                        viewModel = loginViewModel,
-                        onLoginSuccess = {
-                            isLoggedIn = true
-                        }
-                    )
-                }
+                NavGraph(
+                    loginViewModel = loginViewModel,
+                    clientViewModel = clientViewModel,
+                    productViewModel = productViewModel,
+                    orderViewModel = orderViewModel,
+                    settingsViewModel = settingsViewModel
+                )
             }
         }
     }
