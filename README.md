@@ -2,15 +2,15 @@
 
 ## Sistema de Gestão para Representantes Comerciais
 
-O **OrderManager** é um aplicativo Android desenvolvido para auxiliar representantes comerciais e pequenas empresas no gerenciamento de clientes, produtos, estoque e pedidos diretamente pelo celular.
+O **OrderManager** é um aplicativo Android desenvolvido para auxiliar representantes comerciais e pequenas empresas no gerenciamento de clientes, produtos, estoque, pedidos e usuários diretamente pelo celular.
 
-O sistema foi criado com foco em praticidade, organização e controle das vendas realizadas em visitas comerciais, permitindo que vendedores registrem pedidos rapidamente e que administradores acompanhem as operações da empresa.
+O sistema foi projetado para tornar o processo comercial mais organizado, reduzindo o uso de anotações em papel e facilitando o acompanhamento das vendas realizadas pelos vendedores durante visitas a clientes.
 
 ---
 
 # 🎯 Objetivo do Projeto
 
-O objetivo do OrderManager é substituir anotações em papel e planilhas dispersas por um sistema centralizado que permita:
+O principal objetivo do OrderManager é oferecer uma solução simples e eficiente para o gerenciamento de operações comerciais, permitindo:
 
 * Cadastro de clientes
 * Cadastro de produtos
@@ -22,30 +22,38 @@ O objetivo do OrderManager é substituir anotações em papel e planilhas disper
 
 ---
 
-# 👨‍💼 Cenário de Uso
+# 👨‍💼 Cenário de Aplicação
 
-Imagine um representante comercial visitando clientes durante o dia.
+O sistema foi idealizado para o contexto de **Representantes Comerciais**.
 
-Ao chegar em uma empresa, ele pode:
+### Fluxo de Utilização
 
-1. Consultar clientes cadastrados
-2. Ver os produtos disponíveis
-3. Conferir o estoque
-4. Registrar um novo pedido
-5. Calcular automaticamente o valor total da venda
+#### Administrador
 
-Essas informações ficam armazenadas localmente no dispositivo, facilitando o gerenciamento e acompanhamento das operações comerciais.
+* Cadastra vendedores
+* Gerencia usuários do sistema
+* Cadastra produtos
+* Controla estoque
+* Acompanha os pedidos realizados
+
+#### Vendedor
+
+* Consulta clientes
+* Consulta produtos
+* Verifica estoque disponível
+* Registra novos pedidos
+* Calcula automaticamente o valor da venda
 
 ---
 
 # 🏗️ Arquitetura Utilizada
 
-O projeto foi desenvolvido seguindo o padrão **MVVM (Model - View - ViewModel)**.
+O projeto foi desenvolvido utilizando a arquitetura **MVVM (Model - View - ViewModel)**.
 
-## Estrutura
+### Estrutura
 
 ```text
-UI (Compose)
+UI (Jetpack Compose)
 ↓
 ViewModel
 ↓
@@ -54,23 +62,13 @@ Repository
 Room Database
 ```
 
-### Camadas
+### Benefícios da Arquitetura
 
-#### UI
-
-Responsável pelas telas e interação com o usuário.
-
-#### ViewModel
-
-Responsável pela lógica de negócio e gerenciamento de estados.
-
-#### Repository
-
-Responsável pela comunicação entre ViewModel e banco de dados.
-
-#### Room Database
-
-Responsável pelo armazenamento local dos dados.
+* Separação de responsabilidades
+* Maior organização do código
+* Facilidade de manutenção
+* Escalabilidade do sistema
+* Melhor gerenciamento de estados
 
 ---
 
@@ -78,16 +76,20 @@ Responsável pelo armazenamento local dos dados.
 
 ## 🔐 Login
 
-* Tela de autenticação
-* Validação de usuário e senha
-* Controle de acesso ao sistema
+Permite autenticação dos usuários cadastrados.
 
-Usuário padrão:
+### Usuário padrão
 
 ```text
 Usuário: admin
 Senha: 123
 ```
+
+### Recursos
+
+* Validação de credenciais
+* Controle de acesso
+* Diferenciação entre perfis
 
 ---
 
@@ -98,9 +100,9 @@ Permite:
 * Cadastrar clientes
 * Editar clientes
 * Excluir clientes
-* Visualizar lista de clientes
+* Consultar clientes
 
-### Campos
+### Dados cadastrados
 
 * Nome
 * Telefone
@@ -110,8 +112,8 @@ Permite:
 ### Validações
 
 * Campos obrigatórios
-* Validação de e-mail
-* Validação de telefone
+* E-mail válido
+* Telefone válido
 
 ---
 
@@ -122,9 +124,9 @@ Permite:
 * Cadastrar produtos
 * Editar produtos
 * Excluir produtos
-* Visualizar estoque
+* Consultar estoque
 
-### Campos
+### Dados cadastrados
 
 * Nome
 * Descrição
@@ -143,11 +145,11 @@ Permite:
 
 Permite:
 
-* Criar pedidos
+* Registrar pedidos
 * Selecionar cliente
 * Selecionar produto
 * Informar quantidade
-* Calcular valor total automaticamente
+* Calcular automaticamente o valor total
 * Excluir pedidos
 
 ### Informações registradas
@@ -161,58 +163,57 @@ Permite:
 
 ---
 
-## ⚙️ Configurações
-
-Permite:
-
-* Alternar entre tema claro e escuro
-* Persistência das configurações utilizando DataStore
-
----
-
 ## 👨‍💻 Gestão de Usuários
 
 Permite ao administrador:
 
 * Cadastrar vendedores
-* Gerenciar usuários do sistema
-* Controlar permissões
+* Excluir vendedores
+* Gerenciar acessos ao sistema
 
-Perfis disponíveis:
+### Perfis
 
-### ADMIN
+#### ADMIN
 
-Possui acesso total ao sistema.
+Possui acesso completo ao sistema.
 
-### VENDEDOR
+#### VENDEDOR
 
-Possui acesso operacional para utilização do sistema.
+Possui acesso operacional para utilização das funcionalidades comerciais.
 
 ---
 
 ## 📊 Dashboard
 
-Tela inicial contendo resumo do sistema:
+Tela inicial contendo indicadores do sistema:
 
-* Quantidade de clientes
-* Quantidade de produtos
-* Quantidade de pedidos
+* Total de clientes
+* Total de produtos
+* Total de pedidos
+
+---
+
+## ⚙️ Configurações
+
+Permite:
+
+* Ativar tema claro
+* Ativar tema escuro
+* Salvar preferências utilizando DataStore
 
 ---
 
 ## 🚀 Splash Screen
 
-Ao iniciar o aplicativo é exibida uma tela de carregamento personalizada antes do acesso ao login.
+Ao iniciar o aplicativo, uma Splash Screen personalizada é exibida antes da tela de login.
 
 ---
 
 # 🗄️ Banco de Dados
 
-O aplicativo utiliza:
+O sistema utiliza **Room Database** para armazenamento local.
 
-* Room Database
-
-Entidades:
+### Entidades
 
 ```text
 UserEntity
@@ -225,13 +226,13 @@ OrderEntity
 
 # 🎨 Interface
 
-O projeto utiliza:
+Desenvolvida utilizando:
 
 * Jetpack Compose
 * Material Design 3
-* Dark Theme
-* Light Theme
-* Navegação moderna
+* Tema Claro
+* Tema Escuro
+* Componentes modernos do Android
 
 ---
 
@@ -259,10 +260,15 @@ O projeto utiliza:
 
 * Navigation Compose
 
-## Gerenciamento de Estado
+## Programação Assíncrona
 
+* Kotlin Coroutines
 * StateFlow
-* Coroutines
+
+## Controle de Versão
+
+* Git
+* GitHub
 
 ---
 
@@ -293,30 +299,33 @@ com.example.ordermanager
 # 💡 Diferenciais do Projeto
 
 * Arquitetura MVVM
-* Persistência local com Room
-* Configurações salvas com DataStore
-* Dashboard de indicadores
-* Splash Screen
-* Tema escuro
-* Controle de usuários
 * Interface moderna em Jetpack Compose
+* Banco de dados Room
+* Persistência de configurações com DataStore
+* Dashboard com indicadores
+* Controle de usuários
+* Gestão de vendedores
+* Tema claro e escuro
+* Navegação estruturada
 * Organização profissional do código
 
 ---
 
 # 📚 Aprendizados Obtidos
 
-Durante o desenvolvimento deste projeto foram aplicados conhecimentos de:
+Durante o desenvolvimento foram aplicados conhecimentos relacionados a:
 
-* Programação Android
+* Desenvolvimento Android
 * Kotlin
 * Jetpack Compose
 * Arquitetura MVVM
-* Banco de Dados Room
+* Room Database
 * DataStore
-* Navegação entre telas
-* Gerenciamento de estado
-* Versionamento com Git e GitHub
+* Navigation Compose
+* StateFlow
+* Coroutines
+* Git e GitHub
+* Boas práticas de desenvolvimento
 
 ---
 
@@ -326,41 +335,82 @@ Durante o desenvolvimento deste projeto foram aplicados conhecimentos de:
 * Exportação para PDF
 * Busca avançada
 * Dashboard financeiro
+* Integração com APIs externas
 * Sincronização em nuvem
+* Controle avançado de permissões
 * Multiempresa
-* Controle completo de permissões
-* Integração com APIs
 
 ---
 
-# 👨‍🎓 Projeto Acadêmico
+# 👨‍🎓 Informações Acadêmicas
 
-Projeto desenvolvido para fins educacionais com o objetivo de aplicar conceitos modernos de desenvolvimento Android utilizando Kotlin, Jetpack Compose e arquitetura MVVM.
+## Instituição
+
+Instituto Federal de Educação, Ciência e Tecnologia de São Paulo
+
+**IFSP – Campus Capivari**
+
+---
+
+## Professor Responsável
+
+**Edivaldo Serafim**
+
+E-mail institucional:
+
+[eserafim@ifsp.edu.br](mailto:eserafim@ifsp.edu.br)
+
+---
+
+## Desenvolvedor
+
+**Nicolas De Azevedo Andrade Santana**
+
+Responsável por:
+
+* Planejamento do projeto
+* Modelagem do sistema
+* Desenvolvimento Android
+* Implementação da arquitetura MVVM
+* Criação da interface
+* Banco de dados Room
+* Implementação do DataStore
+* Navegação entre telas
+* Testes e validações
+* Documentação técnica
+* Controle de versão com Git e GitHub
+
+---
+
+# 🏆 Resultado Final
+
+O OrderManager entrega uma solução funcional para gestão comercial, permitindo o gerenciamento de clientes, produtos, pedidos e vendedores em um ambiente moderno e organizado.
+
+O projeto foi desenvolvido com foco educacional, aplicando conceitos atuais do ecossistema Android e simulando um cenário real de utilização por representantes comerciais.
 
 ---
 
 # 📷 Demonstração
 
-Adicionar capturas de tela do aplicativo:
+Adicionar capturas de tela:
 
 * Login
 * Home
 * Clientes
 * Produtos
 * Pedidos
+* Usuários
 * Configurações
-* Gestão de Usuários
+* Splash Screen
 
 ---
 
-# 🔗 Repositório
-
-Disponível no GitHub para fins de estudo, evolução e demonstração do projeto.
-
----
-
-## 📦 OrderManager
+## 📦 OrderManager v1.0
 
 **Sistema de Gestão para Representantes Comerciais**
 
-Desenvolvido utilizando Kotlin + Jetpack Compose + MVVM + Room Database.
+Desenvolvido por **Nicolas De Azevedo Andrade Santana**
+
+IFSP Campus Capivari – 2026
+
+Kotlin • Jetpack Compose • MVVM • Room Database • DataStore
